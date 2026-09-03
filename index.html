@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plant Asset Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 font-sans min-h-screen">
 
     <!-- ========================================== -->
-    <!-- LOGIN SCREEN (shown by default)            -->
+    <!-- LOGIN SCREEN                              -->
     <!-- ========================================== -->
     <div id="loginScreen" class="flex items-center justify-center min-h-screen bg-blue-50 px-4">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
@@ -31,6 +31,7 @@
                 </div>
                 <button
                     type="submit"
+                    id="loginBtn"
                     class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
                 >
                     🚀 Sign In
@@ -46,7 +47,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MAIN APP (hidden until login)              -->
+    <!-- MAIN APP                                  -->
     <!-- ========================================== -->
     <div id="mainApp" class="hidden min-h-screen pb-20">
 
@@ -82,12 +83,8 @@
                         <input type="text" id="machineId" required class="w-full mt-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
                     </div>
 
-                    <!-- Section with add capability -->
                     <div>
-                        <div class="flex justify-between items-center">
-                            <label class="block text-sm font-semibold text-gray-700">Section</label>
-                            <button type="button" id="addSectionBtn" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200">+ Add</button>
-                        </div>
+                        <label class="block text-sm font-semibold text-gray-700">Section</label>
                         <select id="section" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white">
                             <option value="Liquid">💧 Liquid</option>
                             <option value="Solid">💊 Solid</option>
@@ -96,12 +93,8 @@
                         </select>
                     </div>
 
-                    <!-- Machine Type with add capability -->
                     <div>
-                        <div class="flex justify-between items-center">
-                            <label class="block text-sm font-semibold text-gray-700">Type of Machine</label>
-                            <button type="button" id="addTypeBtn" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200">+ Add</button>
-                        </div>
+                        <label class="block text-sm font-semibold text-gray-700">Type of Machine</label>
                         <select id="machineType" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white text-sm"></select>
                     </div>
 
@@ -111,10 +104,7 @@
                             <input type="number" id="speed" required class="w-full mt-1 p-2 border border-gray-300 rounded">
                         </div>
                         <div>
-                            <div class="flex justify-between items-center">
-                                <label class="block text-sm font-semibold text-gray-700">Unit</label>
-                                <button type="button" id="addUnitBtn" class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200">+ Add</button>
-                            </div>
+                            <label class="block text-sm font-semibold text-gray-700">Unit</label>
                             <select id="unit" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white text-xs">
                                 <option value="bottles per minute">Bottles / min</option>
                                 <option value="tablet per minute">Tablets / min</option>
@@ -148,14 +138,12 @@
                 <div class="bg-white p-4 rounded-xl shadow">
                     <h2 class="text-md font-bold text-gray-800 border-b pb-2 mb-3">Live Fleet Records</h2>
                     <div id="loadingState" class="text-center text-gray-500 py-6">Connecting to database...</div>
-                    <div id="dbContainer" class="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
-                        <!-- Cards pull here dynamically -->
-                    </div>
+                    <div id="dbContainer" class="space-y-3 max-h-[70vh] overflow-y-auto pr-1"></div>
                 </div>
             </section>
         </main>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation -->
         <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center h-16 z-50">
             <button id="navForm" class="flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold border-r border-gray-100">
                 <span class="text-xl">📝</span>
@@ -169,29 +157,33 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- JAVASCRIPT                                 -->
+    <!-- JAVASCRIPT                                -->
     <!-- ========================================== -->
     <script>
         (function() {
             // ========================================
-            // CONFIGURATION
+            // CONFIGURATION - YOUR APPS SCRIPT URL
             // ========================================
-            // Replace with your Apps Script web app URL
-            // Example: "https://script.google.com/macros/s/ABC123/exec"
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ76ejetjLHfb8RKv_dhuSAs0IP1WcXhgkZMaxvZt30uvi1mJEs2QDDv2Ek82WxThgXw/exec";
+            // ⚠️ REPLACE THIS WITH YOUR APPS SCRIPT URL
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUpQL6sUf-aqQ8NSuggRoigQ4PhBlWWkAhVXZcysti6JwQJcSWdtimcdTxrPDwvhff/exec";
 
             // ========================================
-            // LOGIN SYSTEM
+            // DOM REFS
             // ========================================
             const loginScreen = document.getElementById('loginScreen');
             const mainApp = document.getElementById('mainApp');
             const loginForm = document.getElementById('loginForm');
             const loginEmail = document.getElementById('loginEmail');
             const loginMessage = document.getElementById('loginMessage');
+            const loginBtn = document.getElementById('loginBtn');
             const userBadge = document.getElementById('userBadge');
             const logoutBtn = document.getElementById('logoutBtn');
+            const statusToast = document.getElementById('statusToast');
+            const refreshBtn = document.getElementById('refreshBtn');
 
-            // Check if user is already logged in (session)
+            // ========================================
+            // CHECK SESSION
+            // ========================================
             const savedEmail = sessionStorage.getItem('plantHubUser');
             if (savedEmail) {
                 loginScreen.classList.add('hidden');
@@ -200,7 +192,9 @@
                 initializeApp();
             }
 
-            // Login handler
+            // ========================================
+            // LOGIN HANDLER
+            // ========================================
             loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const email = loginEmail.value.trim().toLowerCase();
@@ -211,15 +205,30 @@
                 }
 
                 showLoginMessage('Signing in...', 'blue');
+                loginBtn.disabled = true;
+                loginBtn.textContent = '⏳ Please wait...';
 
                 try {
-                    const response = await fetch(`${SCRIPT_URL}?action=login`, {
+                    const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: email })
+                        body: JSON.stringify({ 
+                            action: 'login',
+                            email: email 
+                        })
                     });
 
-                    const result = await response.json();
+                    const text = await response.text();
+                    let result;
+                    try {
+                        result = JSON.parse(text);
+                    } catch(e) {
+                        showLoginMessage('❌ Server error. Please try again.', 'red');
+                        console.error('Non-JSON response:', text);
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '🚀 Sign In';
+                        return;
+                    }
 
                     if (result.success) {
                         sessionStorage.setItem('plantHubUser', email);
@@ -229,21 +238,15 @@
                         showLoginMessage('', '');
                         initializeApp();
                     } else {
-                        showLoginMessage('❌ ' + (result.error || 'Login failed. Please try again.'), 'red');
+                        showLoginMessage('❌ ' + (result.error || 'Login failed.'), 'red');
                     }
                 } catch (err) {
-                    showLoginMessage('❌ Network error. Please check your connection.', 'red');
+                    showLoginMessage('❌ Network error. Check your connection.', 'red');
                     console.error('Login error:', err);
                 }
-            });
 
-            // Logout handler
-            logoutBtn.addEventListener('click', function() {
-                sessionStorage.removeItem('plantHubUser');
-                loginScreen.classList.remove('hidden');
-                mainApp.classList.add('hidden');
-                loginEmail.value = '';
-                loginMessage.classList.add('hidden');
+                loginBtn.disabled = false;
+                loginBtn.textContent = '🚀 Sign In';
             });
 
             function showLoginMessage(msg, color) {
@@ -260,12 +263,42 @@
             }
 
             // ========================================
-            // APP INITIALIZATION
+            // LOGOUT
+            // ========================================
+            logoutBtn.addEventListener('click', function() {
+                sessionStorage.removeItem('plantHubUser');
+                loginScreen.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+                loginEmail.value = '';
+                loginMessage.classList.add('hidden');
+            });
+
+            // ========================================
+            // TOAST HELPER
+            // ========================================
+            function showToast(msg, type) {
+                statusToast.classList.remove('hidden', 'bg-green-100', 'text-green-800', 
+                    'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
+                statusToast.className = 'mb-4 p-3 rounded text-center text-sm font-semibold block';
+                
+                if (type === 'success') {
+                    statusToast.classList.add('bg-green-100', 'text-green-800');
+                } else if (type === 'error') {
+                    statusToast.classList.add('bg-red-100', 'text-red-800');
+                } else {
+                    statusToast.classList.add('bg-yellow-100', 'text-yellow-800');
+                }
+                statusToast.textContent = msg;
+                
+                setTimeout(() => statusToast.classList.add('hidden'), 3000);
+            }
+
+            // ========================================
+            // INITIALIZE APP
             // ========================================
             function initializeApp() {
-                // Default lists stored locally
-                const defaultSections = ["Liquid", "Solid", "Antibiotic", "External"];
-                const defaultTypes = [
+                // Machine types
+                const machineTypes = [
                     "Tank", "Pump", "Turntable", "Bottle dryer",
                     "Automatic filling machine and capping machine",
                     "Manual filling machine", "Manual capping machine",
@@ -277,132 +310,52 @@
                     "Vibro sifter", "Powder blender", "Particle size reduction machine",
                     "Rapid mixer granulator", "Fluid bed dryer", "Oven", "Roller compactor machine"
                 ];
-                const defaultUnits = [
-                    "bottles per minute", "tablet per minute", "Carton per minute",
-                    "Tubes per minute", "sachet per minute", "Label per minute"
-                ];
 
-                // Load lists from localStorage or use defaults
-                function loadLists() {
-                    let sections = JSON.parse(localStorage.getItem('plant_sections'));
-                    if (!sections || sections.length === 0) {
-                        sections = defaultSections;
-                        localStorage.setItem('plant_sections', JSON.stringify(sections));
-                    }
-                    let types = JSON.parse(localStorage.getItem('plant_types'));
-                    if (!types || types.length === 0) {
-                        types = defaultTypes;
-                        localStorage.setItem('plant_types', JSON.stringify(types));
-                    }
-                    let units = JSON.parse(localStorage.getItem('plant_units'));
-                    if (!units || units.length === 0) {
-                        units = defaultUnits;
-                        localStorage.setItem('plant_units', JSON.stringify(units));
-                    }
-                    return { sections, types, units };
-                }
-
-                function populateSelect(select, optionsArray, selectedValue) {
-                    select.innerHTML = '';
-                    optionsArray.forEach(opt => {
-                        const option = document.createElement('option');
-                        option.value = opt;
-                        option.textContent = opt;
-                        select.appendChild(option);
-                    });
-                    if (selectedValue && optionsArray.includes(selectedValue)) {
-                        select.value = selectedValue;
-                    }
-                }
-
-                function refreshSelects() {
-                    const { sections, types, units } = loadLists();
-                    const currentSection = sectionSelect.value;
-                    const currentType = typeSelect.value;
-                    const currentUnit = unitSelect.value;
-                    populateSelect(sectionSelect, sections, currentSection);
-                    populateSelect(typeSelect, types, currentType);
-                    populateSelect(unitSelect, units, currentUnit);
-                }
-
-                function addOptionToList(listKey, selectEl, promptMessage) {
-                    const newVal = prompt(promptMessage);
-                    if (!newVal || newVal.trim() === '') return;
-                    const trimmed = newVal.trim();
-                    const list = JSON.parse(localStorage.getItem(listKey)) || [];
-                    if (!list.includes(trimmed)) {
-                        list.push(trimmed);
-                        localStorage.setItem(listKey, JSON.stringify(list));
-                        refreshSelects();
-                        selectEl.value = trimmed;
-                    } else {
-                        alert(`"${trimmed}" already exists.`);
-                        selectEl.value = trimmed;
-                    }
-                }
-
-                // DOM refs
-                const sectionSelect = document.getElementById('section');
                 const typeSelect = document.getElementById('machineType');
-                const unitSelect = document.getElementById('unit');
-
-                // Add buttons
-                document.getElementById('addSectionBtn').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    addOptionToList('plant_sections', sectionSelect, 'Enter new Section name:');
+                machineTypes.forEach(type => {
+                    const opt = document.createElement('option');
+                    opt.value = type;
+                    opt.textContent = type;
+                    typeSelect.appendChild(opt);
                 });
-                document.getElementById('addTypeBtn').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    addOptionToList('plant_types', typeSelect, 'Enter new Machine Type:');
-                });
-                document.getElementById('addUnitBtn').addEventListener('click', function(e) {
-                    e.preventDefault();
-                    addOptionToList('plant_units', unitSelect, 'Enter new Unit:');
-                });
-
-                refreshSelects();
 
                 // Navigation
                 const formTab = document.getElementById('formTab');
                 const dbTab = document.getElementById('dbTab');
                 const navForm = document.getElementById('navForm');
                 const navDb = document.getElementById('navDb');
-                const refreshBtn = document.getElementById('refreshBtn');
                 const dbContainer = document.getElementById('dbContainer');
                 const loadingState = document.getElementById('loadingState');
-                const toast = document.getElementById('statusToast');
 
                 navForm.addEventListener('click', () => {
                     formTab.classList.remove('hidden');
                     dbTab.classList.add('hidden');
                     refreshBtn.classList.add('hidden');
-                    navForm.className =
-                        "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold border-r border-gray-100";
-                    navDb.className =
-                        "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold";
+                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold border-r border-gray-100";
+                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold";
                 });
 
                 navDb.addEventListener('click', () => {
                     formTab.classList.add('hidden');
                     dbTab.classList.remove('hidden');
                     refreshBtn.classList.remove('hidden');
-                    navForm.className =
-                        "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold border-r border-gray-100";
-                    navDb.className =
-                        "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold";
+                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold border-r border-gray-100";
+                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold";
                     fetchDatabase();
                 });
 
                 refreshBtn.addEventListener('click', fetchDatabase);
 
-                // Fetch from Google Sheet
+                // ========================================
+                // FETCH DATABASE
+                // ========================================
                 async function fetchDatabase() {
-                    dbContainer.innerHTML = "";
+                    dbContainer.innerHTML = '';
                     loadingState.classList.remove('hidden');
-                    loadingState.innerText = "Syncing with live sheets...";
+                    loadingState.textContent = 'Syncing with live sheets...';
 
                     try {
-                        const response = await fetch(`${SCRIPT_URL}?action=get`);
+                        const response = await fetch(SCRIPT_URL);
                         const result = await response.json();
 
                         loadingState.classList.add('hidden');
@@ -420,46 +373,35 @@
                             return;
                         }
 
-                        const reversed = [...data].reverse();
-                        reversed.forEach(item => {
+                        [...data].reverse().forEach(item => {
                             const card = document.createElement('div');
                             card.className = "border border-gray-200 rounded-lg p-3 space-y-1 bg-gray-50 shadow-sm text-sm";
-
-                            const machineName = item["Machine Name"] || 'Unnamed Asset';
-                            const id = item["ID"] || 'N/A';
-                            const section = item["Section"] || 'Other';
-                            const machineType = item["Machine Type"] || '—';
-                            const speed = item["Speed"] ?? '—';
-                            const unit = item["Unit"] || '';
-                            const oee = item["OEE"] || '—';
-                            const actualOutput = item["Actual Daily Output"] ?? '—';
-                            const formattedOutput = typeof actualOutput === 'number' ? actualOutput.toLocaleString() :
-                            actualOutput;
-
                             card.innerHTML = `
                                 <div class="flex justify-between items-start border-b border-gray-200 pb-1 mb-1">
                                     <div>
-                                        <h4 class="font-bold text-gray-900">${machineName}</h4>
-                                        <p class="text-xs text-gray-500">ID: ${id}  ·  ${section}</p>
+                                        <h4 class="font-bold text-gray-900">${item["Machine Name"] || 'Unnamed Asset'}</h4>
+                                        <p class="text-xs text-gray-500">ID: ${item["ID"] || 'N/A'} · ${item["Section"] || 'Other'}</p>
                                     </div>
-                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${machineType}</span>
+                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${item["Machine Type"] || '—'}</span>
                                 </div>
                                 <div class="grid grid-cols-2 gap-1 text-xs text-gray-700">
-                                    <span>⚡ Speed: ${speed} ${unit}</span>
-                                    <span>📊 OEE: ${oee}</span>
-                                    <span class="col-span-2">🏭 Output: ${formattedOutput} / day</span>
+                                    <span>⚡ Speed: ${item["Speed"] ?? '—'} ${item["Unit"] || ''}</span>
+                                    <span>📊 OEE: ${item["OEE"] || '—'}</span>
+                                    <span class="col-span-2">🏭 Output: ${typeof item["Actual Daily Output"] === 'number' ? item["Actual Daily Output"].toLocaleString() : item["Actual Daily Output"] || '—'} / day</span>
                                 </div>
                             `;
                             dbContainer.appendChild(card);
                         });
 
                     } catch (err) {
-                        loadingState.innerText = "❌ Failed to connect to database.";
-                        console.error("Fetch error:", err);
+                        loadingState.textContent = '❌ Failed to connect to database.';
+                        console.error('Fetch error:', err);
                     }
                 }
 
-                // Form submit
+                // ========================================
+                // SUBMIT FORM
+                // ========================================
                 document.getElementById('inventoryForm').addEventListener('submit', async function(e) {
                     e.preventDefault();
 
@@ -471,17 +413,13 @@
                     const unit = document.getElementById('unit').value;
                     const hoursValue = parseFloat(document.getElementById('hours').value);
                     const oeePercent = parseFloat(document.getElementById('oee').value);
-                    const oeeDecimal = oeePercent / 100;
 
                     if (!machineName || !machineId || isNaN(speedValue) || isNaN(hoursValue) || isNaN(oeePercent)) {
-                        toast.className =
-                            "mb-4 p-3 rounded text-center text-sm font-semibold bg-red-100 text-red-800 block";
-                        toast.innerText = "⚠️ Please fill all fields correctly.";
-                        setTimeout(() => toast.classList.add('hidden'), 3000);
+                        showToast('⚠️ Please fill all fields correctly.', 'error');
                         return;
                     }
 
-                    const actualDailyOutput = Math.round((hoursValue * 60) * speedValue * oeeDecimal);
+                    const actualDailyOutput = Math.round((hoursValue * 60) * speedValue * (oeePercent / 100));
 
                     const payload = [{
                         "Machine Name": machineName,
@@ -496,12 +434,10 @@
                         "Timestamp": new Date().toLocaleString()
                     }];
 
-                    toast.className =
-                        "mb-4 p-3 rounded text-center text-sm font-semibold bg-yellow-100 text-yellow-800 block";
-                    toast.innerText = "Syncing with Google Sheets...";
+                    showToast('Syncing with Google Sheets...', 'info');
 
                     try {
-                        const response = await fetch(`${SCRIPT_URL}?action=post`, {
+                        const response = await fetch(SCRIPT_URL, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
@@ -510,29 +446,18 @@
                         const result = await response.json();
 
                         if (result.success) {
-                            toast.className =
-                                "mb-4 p-3 rounded text-center text-sm font-semibold bg-green-100 text-green-800 block";
-                            toast.innerText = "✓ Record appended to Google Sheet!";
+                            showToast('✓ Record appended to Google Sheet!', 'success');
                             document.getElementById('inventoryForm').reset();
-                            document.getElementById('hours').value = "8";
-                            document.getElementById('oee').value = "80";
-                            setTimeout(() => toast.classList.add('hidden'), 3000);
+                            document.getElementById('hours').value = '8';
+                            document.getElementById('oee').value = '80';
                         } else {
                             throw new Error(result.error || 'Upload failed');
                         }
                     } catch (err) {
-                        toast.className =
-                            "mb-4 p-3 rounded text-center text-sm font-semibold bg-red-100 text-red-800 block";
-                        toast.innerText = "⚠️ " + (err.message || 'Network timeout. Cloud sync failed.');
-                        console.error("Submit error:", err);
+                        showToast('⚠️ ' + (err.message || 'Network timeout. Cloud sync failed.'), 'error');
+                        console.error('Submit error:', err);
                     }
                 });
-
-                // Hide toast initially
-                toast.classList.add('hidden');
-
-                // Pre-fetch database if user was logged in
-                // (optional: you can call fetchDatabase here if you want to show data immediately)
             }
         })();
     </script>
