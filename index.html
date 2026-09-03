@@ -4,44 +4,196 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Plant Asset Hub</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'plant-primary': '#0F3B5E',
+                        'plant-secondary': '#1A6B8A',
+                        'plant-accent': '#2ECC71',
+                        'plant-gold': '#F1C40F',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0F3B5E 0%, #1A6B8A 100%);
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(15, 59, 94, 0.15);
+            border-color: #0F3B5E;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0F3B5E 0%, #1A6B8A 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(15, 59, 94, 0.3);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .machine-card {
+            border-left: 4px solid #2ECC71;
+            transition: all 0.3s ease;
+        }
+        .machine-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .nav-active {
+            background: linear-gradient(135deg, rgba(15, 59, 94, 0.08), rgba(26, 107, 138, 0.08));
+            color: #0F3B5E;
+            font-weight: 600;
+        }
+        .toast-success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+        .toast-error {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+        }
+        .toast-info {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .login-icon {
+            background: linear-gradient(135deg, #0F3B5E, #1A6B8A);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(15, 59, 94, 0.3);
+        }
+        .badge-user {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .section-badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .section-liquid { background: #DBEAFE; color: #1E40AF; }
+        .section-solid { background: #D1FAE5; color: #065F46; }
+        .section-antibiotic { background: #FCE4EC; color: #9C27B0; }
+        .section-external { background: #FFF3E0; color: #E65100; }
+        select, input {
+            transition: all 0.2s ease;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0F3B5E;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1A6B8A;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen">
+<body>
 
     <!-- ========================================== -->
     <!-- LOGIN SCREEN                              -->
     <!-- ========================================== -->
-    <div id="loginScreen" class="flex items-center justify-center min-h-screen bg-blue-50 px-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold text-blue-700 mb-2">⚙️ Plant Asset Hub</h1>
-                <p class="text-gray-500 text-sm mb-8">Sign in with your work email</p>
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center px-4 py-12" style="background: linear-gradient(135deg, #0F3B5E 0%, #1A6B8A 50%, #2C3E50 100%);">
+        <div class="login-card rounded-2xl p-8 max-w-md w-full">
+            
+            <!-- Logo / Icon -->
+            <div class="login-icon mb-6">
+                <i class="fas fa-industry text-3xl text-white"></i>
+            </div>
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">
+                    Plant Asset Hub
+                </h1>
+                <p class="text-gray-500 text-sm mt-2 font-medium">
+                    <i class="fas fa-shield-alt text-plant-primary mr-1"></i>
+                    Secure access for authorized personnel
+                </p>
             </div>
 
-            <form id="loginForm" class="space-y-4">
+            <form id="loginForm" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        <i class="fas fa-envelope mr-1.5 text-plant-primary"></i>
+                        Email Address
+                    </label>
                     <input
                         type="email"
                         id="loginEmail"
                         required
                         placeholder="name@company.com"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl input-focus outline-none transition text-gray-700"
                     />
                 </div>
+                
                 <button
                     type="submit"
                     id="loginBtn"
-                    class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
+                    class="btn-primary w-full text-white font-bold py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-base"
                 >
-                    🚀 Sign In
+                    <i class="fas fa-arrow-right-to-bracket"></i>
+                    Sign In
                 </button>
             </form>
 
-            <div id="loginMessage" class="mt-4 text-center text-sm hidden"></div>
+            <div id="loginMessage" class="mt-4 text-center text-sm font-medium hidden"></div>
 
-            <div class="mt-6 text-xs text-center text-gray-400 border-t pt-4">
-                <p>⚠️ Demo: Any valid email works. New users are auto-added.</p>
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <div class="flex items-center justify-center gap-2 text-xs text-gray-400">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Any valid email works · New users are auto-added</span>
+                </div>
             </div>
         </div>
     </div>
@@ -49,109 +201,167 @@
     <!-- ========================================== -->
     <!-- MAIN APP                                  -->
     <!-- ========================================== -->
-    <div id="mainApp" class="hidden min-h-screen pb-20">
+    <div id="mainApp" class="hidden min-h-screen pb-24">
 
         <!-- Header -->
-        <header class="bg-blue-700 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <h1 class="text-lg font-bold">⚙️ Plant Asset Hub</h1>
-                <span id="userBadge" class="text-xs bg-blue-500 px-2 py-0.5 rounded-full"></span>
-            </div>
-            <div class="flex gap-2">
-                <button id="refreshBtn" class="hidden text-sm bg-blue-800 px-3 py-1 rounded hover:bg-blue-900">🔄 Refresh</button>
-                <button id="logoutBtn" class="text-sm bg-red-600 px-3 py-1 rounded hover:bg-red-700">🚪</button>
+        <header class="gradient-bg text-white shadow-xl sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 rounded-lg p-2">
+                        <i class="fas fa-industry text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight">Plant Asset Hub</h1>
+                        <span id="userBadge" class="badge-user text-white/90 text-xs">
+                            <i class="fas fa-user mr-1"></i>
+                            <span id="userEmailDisplay">Loading...</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="refreshBtn" class="hidden bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                    <button id="logoutBtn" class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-sm transition flex items-center gap-1.5">
+                        <i class="fas fa-right-from-bracket"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
-        <main class="max-w-md mx-auto p-4">
+        <main class="max-w-3xl mx-auto px-4 py-6">
 
             <!-- Status Toast -->
-            <div id="statusToast" class="hidden mb-4 p-3 rounded text-center font-semibold text-sm"></div>
+            <div id="statusToast" class="hidden rounded-xl px-5 py-3.5 text-sm font-semibold flex items-center gap-3 shadow-lg transition-all duration-500"></div>
 
             <!-- TAB 1: FORM VIEW -->
-            <section id="formTab" class="space-y-4">
-                <form id="inventoryForm" class="bg-white p-5 rounded-xl shadow space-y-4">
-                    <h2 class="text-md font-bold text-gray-800 border-b pb-2">Log New Machinery</h2>
+            <section id="formTab" class="space-y-6">
+                <div class="glass-card rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2 mb-5 pb-3 border-b border-gray-200">
+                        <i class="fas fa-plus-circle text-plant-primary text-2xl"></i>
+                        Log New Machinery
+                    </h2>
+                    
+                    <form id="inventoryForm" class="space-y-5">
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Machine Name</label>
-                        <input type="text" id="machineName" required class="w-full mt-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Identification Number (ID)</label>
-                        <input type="text" id="machineId" required class="w-full mt-1 p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Section</label>
-                        <select id="section" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white">
-                            <option value="Liquid">💧 Liquid</option>
-                            <option value="Solid">💊 Solid</option>
-                            <option value="Antibiotic">🧪 Antibiotic</option>
-                            <option value="External">📦 External</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Type of Machine</label>
-                        <select id="machineType" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white text-sm"></select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">Speed Run Rate</label>
-                            <input type="number" id="speed" required class="w-full mt-1 p-2 border border-gray-300 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-cogs mr-1.5 text-plant-primary"></i>
+                                    Machine Name
+                                </label>
+                                <input type="text" id="machineName" required placeholder="e.g., Filling Machine" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl input-focus outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-barcode mr-1.5 text-plant-primary"></i>
+                                    Identification Number
+                                </label>
+                                <input type="text" id="machineId" required placeholder="e.g., FM-001" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl input-focus outline-none transition">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">Unit</label>
-                            <select id="unit" class="w-full mt-1 p-2 border border-gray-300 rounded bg-white text-xs">
-                                <option value="bottles per minute">Bottles / min</option>
-                                <option value="tablet per minute">Tablets / min</option>
-                                <option value="Carton per minute">Cartons / min</option>
-                                <option value="Tubes per minute">Tubes / min</option>
-                                <option value="sachet per minute">Sachets / min</option>
-                                <option value="Label per minute">Labels / min</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">Hours/Day</label>
-                            <input type="number" id="hours" value="8" step="0.5" class="w-full mt-1 p-2 border border-gray-300 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-layer-group mr-1.5 text-plant-primary"></i>
+                                    Section
+                                </label>
+                                <select id="section" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white input-focus outline-none transition">
+                                    <option value="Liquid">💧 Liquid</option>
+                                    <option value="Solid">💊 Solid</option>
+                                    <option value="Antibiotic">🧪 Antibiotic</option>
+                                    <option value="External">📦 External</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-microchip mr-1.5 text-plant-primary"></i>
+                                    Type of Machine
+                                </label>
+                                <select id="machineType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white input-focus outline-none transition text-sm"></select>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700">OEE Target (%)</label>
-                            <input type="number" id="oee" value="80" min="1" max="100" class="w-full mt-1 p-2 border border-gray-300 rounded">
-                        </div>
-                    </div>
 
-                    <button type="submit" class="w-full bg-blue-600 text-white font-bold p-3 rounded-lg hover:bg-blue-700 active:scale-95 transition shadow">
-                        🚀 Upload to Google Sheets
-                    </button>
-                </form>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-gauge-high mr-1.5 text-plant-primary"></i>
+                                    Speed Run Rate
+                                </label>
+                                <input type="number" id="speed" required placeholder="e.g., 120" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl input-focus outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-ruler mr-1.5 text-plant-primary"></i>
+                                    Unit
+                                </label>
+                                <select id="unit" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-white input-focus outline-none transition text-xs">
+                                    <option value="bottles per minute">Bottles / min</option>
+                                    <option value="tablet per minute">Tablets / min</option>
+                                    <option value="Carton per minute">Cartons / min</option>
+                                    <option value="Tubes per minute">Tubes / min</option>
+                                    <option value="sachet per minute">Sachets / min</option>
+                                    <option value="Label per minute">Labels / min</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-clock mr-1.5 text-plant-primary"></i>
+                                    Hours / Day
+                                </label>
+                                <input type="number" id="hours" value="8" step="0.5" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl input-focus outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                                    <i class="fas fa-bullseye mr-1.5 text-plant-primary"></i>
+                                    OEE Target (%)
+                                </label>
+                                <input type="number" id="oee" value="80" min="1" max="100" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl input-focus outline-none transition">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary w-full text-white font-bold py-3.5 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-base mt-2">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Upload to Google Sheets
+                        </button>
+                    </form>
+                </div>
             </section>
 
             <!-- TAB 2: LIVE DATABASE VIEW -->
-            <section id="dbTab" class="hidden space-y-4">
-                <div class="bg-white p-4 rounded-xl shadow">
-                    <h2 class="text-md font-bold text-gray-800 border-b pb-2 mb-3">Live Fleet Records</h2>
-                    <div id="loadingState" class="text-center text-gray-500 py-6">Connecting to database...</div>
-                    <div id="dbContainer" class="space-y-3 max-h-[70vh] overflow-y-auto pr-1"></div>
+            <section id="dbTab" class="hidden space-y-6">
+                <div class="glass-card rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2 mb-5 pb-3 border-b border-gray-200">
+                        <i class="fas fa-database text-plant-primary text-2xl"></i>
+                        Live Fleet Records
+                    </h2>
+                    
+                    <div id="loadingState" class="text-center text-gray-500 py-12">
+                        <i class="fas fa-spinner fa-spin text-3xl text-plant-primary mb-3 block"></i>
+                        <span>Connecting to database...</span>
+                    </div>
+                    
+                    <div id="dbContainer" class="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
+                        <!-- Cards pull here dynamically -->
+                    </div>
                 </div>
             </section>
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg flex justify-around items-center h-16 z-50">
-            <button id="navForm" class="flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold border-r border-gray-100">
-                <span class="text-xl">📝</span>
-                <span class="text-xs">Add Machine</span>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-2xl flex justify-around items-center h-20 z-50">
+            <button id="navForm" class="flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold border-r border-gray-100 transition">
+                <i class="fas fa-plus-circle text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-semibold">Add Machine</span>
             </button>
-            <button id="navDb" class="flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold">
-                <span class="text-xl">📊</span>
-                <span class="text-xs">View Database</span>
+            <button id="navDb" class="flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium transition">
+                <i class="fas fa-table text-2xl mb-0.5"></i>
+                <span class="text-[11px] font-semibold">View Database</span>
             </button>
         </nav>
     </div>
@@ -162,9 +372,8 @@
     <script>
         (function() {
             // ========================================
-            // CONFIGURATION - YOUR APPS SCRIPT URL
+            // CONFIGURATION
             // ========================================
-            // ⚠️ REPLACE THIS WITH YOUR APPS SCRIPT URL
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUpQL6sUf-aqQ8NSuggRoigQ4PhBlWWkAhVXZcysti6JwQJcSWdtimcdTxrPDwvhff/exec";
 
             // ========================================
@@ -176,7 +385,7 @@
             const loginEmail = document.getElementById('loginEmail');
             const loginMessage = document.getElementById('loginMessage');
             const loginBtn = document.getElementById('loginBtn');
-            const userBadge = document.getElementById('userBadge');
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
             const logoutBtn = document.getElementById('logoutBtn');
             const statusToast = document.getElementById('statusToast');
             const refreshBtn = document.getElementById('refreshBtn');
@@ -188,7 +397,7 @@
             if (savedEmail) {
                 loginScreen.classList.add('hidden');
                 mainApp.classList.remove('hidden');
-                userBadge.textContent = savedEmail;
+                userEmailDisplay.textContent = savedEmail;
                 initializeApp();
             }
 
@@ -200,13 +409,13 @@
                 const email = loginEmail.value.trim().toLowerCase();
 
                 if (!email || !email.includes('@')) {
-                    showLoginMessage('Please enter a valid email address.', 'red');
+                    showLoginMessage('Please enter a valid email address.', 'error');
                     return;
                 }
 
-                showLoginMessage('Signing in...', 'blue');
+                showLoginMessage('Signing in...', 'info');
                 loginBtn.disabled = true;
-                loginBtn.textContent = '⏳ Please wait...';
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
 
                 try {
                     const response = await fetch(SCRIPT_URL, {
@@ -223,10 +432,10 @@
                     try {
                         result = JSON.parse(text);
                     } catch(e) {
-                        showLoginMessage('❌ Server error. Please try again.', 'red');
+                        showLoginMessage('Server error. Please try again.', 'error');
                         console.error('Non-JSON response:', text);
                         loginBtn.disabled = false;
-                        loginBtn.textContent = '🚀 Sign In';
+                        loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
                         return;
                     }
 
@@ -234,31 +443,33 @@
                         sessionStorage.setItem('plantHubUser', email);
                         loginScreen.classList.add('hidden');
                         mainApp.classList.remove('hidden');
-                        userBadge.textContent = email;
+                        userEmailDisplay.textContent = email;
                         showLoginMessage('', '');
                         initializeApp();
                     } else {
-                        showLoginMessage('❌ ' + (result.error || 'Login failed.'), 'red');
+                        showLoginMessage(result.error || 'Login failed.', 'error');
                     }
                 } catch (err) {
-                    showLoginMessage('❌ Network error. Check your connection.', 'red');
+                    showLoginMessage('Network error. Check your connection.', 'error');
                     console.error('Login error:', err);
                 }
 
                 loginBtn.disabled = false;
-                loginBtn.textContent = '🚀 Sign In';
+                loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
             });
 
-            function showLoginMessage(msg, color) {
+            function showLoginMessage(msg, type) {
                 if (!msg) {
                     loginMessage.classList.add('hidden');
                     return;
                 }
                 loginMessage.classList.remove('hidden');
-                loginMessage.className = 'mt-4 text-center text-sm font-semibold p-2 rounded ' +
-                    (color === 'red' ? 'bg-red-100 text-red-700' :
-                    color === 'blue' ? 'bg-blue-100 text-blue-700' :
-                    'bg-gray-100 text-gray-700');
+                const colors = {
+                    error: 'text-red-700 bg-red-50 border border-red-200',
+                    info: 'text-blue-700 bg-blue-50 border border-blue-200',
+                    success: 'text-green-700 bg-green-50 border border-green-200'
+                };
+                loginMessage.className = 'mt-4 text-center text-sm font-medium p-3 rounded-xl ' + (colors[type] || colors.info);
                 loginMessage.textContent = msg;
             }
 
@@ -277,20 +488,25 @@
             // TOAST HELPER
             // ========================================
             function showToast(msg, type) {
-                statusToast.classList.remove('hidden', 'bg-green-100', 'text-green-800', 
-                    'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
-                statusToast.className = 'mb-4 p-3 rounded text-center text-sm font-semibold block';
+                statusToast.classList.remove('hidden', 'toast-success', 'toast-error', 'toast-info');
+                statusToast.className = 'rounded-xl px-5 py-3.5 text-sm font-semibold flex items-center gap-3 shadow-lg transition-all duration-500 block';
+                
+                const icons = {
+                    success: '<i class="fas fa-check-circle text-lg"></i>',
+                    error: '<i class="fas fa-exclamation-circle text-lg"></i>',
+                    info: '<i class="fas fa-info-circle text-lg"></i>'
+                };
                 
                 if (type === 'success') {
-                    statusToast.classList.add('bg-green-100', 'text-green-800');
+                    statusToast.classList.add('toast-success');
                 } else if (type === 'error') {
-                    statusToast.classList.add('bg-red-100', 'text-red-800');
+                    statusToast.classList.add('toast-error');
                 } else {
-                    statusToast.classList.add('bg-yellow-100', 'text-yellow-800');
+                    statusToast.classList.add('toast-info');
                 }
-                statusToast.textContent = msg;
+                statusToast.innerHTML = (icons[type] || icons.info) + ' ' + msg;
                 
-                setTimeout(() => statusToast.classList.add('hidden'), 3000);
+                setTimeout(() => statusToast.classList.add('hidden'), 3500);
             }
 
             // ========================================
@@ -331,16 +547,16 @@
                     formTab.classList.remove('hidden');
                     dbTab.classList.add('hidden');
                     refreshBtn.classList.add('hidden');
-                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold border-r border-gray-100";
-                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold";
+                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold border-r border-gray-100 transition";
+                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium transition";
                 });
 
                 navDb.addEventListener('click', () => {
                     formTab.classList.add('hidden');
                     dbTab.classList.remove('hidden');
                     refreshBtn.classList.remove('hidden');
-                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-semibold border-r border-gray-100";
-                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-blue-600 font-bold";
+                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium border-r border-gray-100 transition";
+                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold transition";
                     fetchDatabase();
                 });
 
@@ -352,7 +568,7 @@
                 async function fetchDatabase() {
                     dbContainer.innerHTML = '';
                     loadingState.classList.remove('hidden');
-                    loadingState.textContent = 'Syncing with live sheets...';
+                    loadingState.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-plant-primary mb-3 block"></i><span>Syncing with live sheets...</span>';
 
                     try {
                         const response = await fetch(SCRIPT_URL);
@@ -361,40 +577,74 @@
                         loadingState.classList.add('hidden');
 
                         if (!result.success) {
-                            dbContainer.innerHTML =
-                                `<div class="text-center text-red-500 py-6 text-sm">❌ ${result.error || 'Failed to load data'}</div>`;
+                            dbContainer.innerHTML = `
+                                <div class="text-center text-red-500 py-8 text-sm">
+                                    <i class="fas fa-exclamation-triangle text-3xl mb-2 block"></i>
+                                    ${result.error || 'Failed to load data'}
+                                </div>`;
                             return;
                         }
 
                         const data = result.data || [];
                         if (data.length === 0) {
-                            dbContainer.innerHTML =
-                                `<div class="text-center text-gray-400 py-6 text-sm">No machines listed in spreadsheet yet.</div>`;
+                            dbContainer.innerHTML = `
+                                <div class="text-center text-gray-400 py-12 text-sm">
+                                    <i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>
+                                    No machines listed in spreadsheet yet.
+                                </div>`;
                             return;
                         }
 
                         [...data].reverse().forEach(item => {
                             const card = document.createElement('div');
-                            card.className = "border border-gray-200 rounded-lg p-3 space-y-1 bg-gray-50 shadow-sm text-sm";
+                            const sectionClass = {
+                                'Liquid': 'section-liquid',
+                                'Solid': 'section-solid',
+                                'Antibiotic': 'section-antibiotic',
+                                'External': 'section-external'
+                            }[item["Section"]] || 'section-liquid';
+                            
+                            card.className = "glass-card machine-card rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300";
                             card.innerHTML = `
-                                <div class="flex justify-between items-start border-b border-gray-200 pb-1 mb-1">
+                                <div class="flex justify-between items-start">
                                     <div>
-                                        <h4 class="font-bold text-gray-900">${item["Machine Name"] || 'Unnamed Asset'}</h4>
-                                        <p class="text-xs text-gray-500">ID: ${item["ID"] || 'N/A'} · ${item["Section"] || 'Other'}</p>
+                                        <h4 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                                            <i class="fas fa-microchip text-plant-primary text-sm"></i>
+                                            ${item["Machine Name"] || 'Unnamed Asset'}
+                                        </h4>
+                                        <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
+                                            <span class="font-medium">ID:</span> ${item["ID"] || 'N/A'}
+                                            <span class="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
+                                            <span class="section-badge ${sectionClass}">${item["Section"] || 'Other'}</span>
+                                        </p>
                                     </div>
-                                    <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${item["Machine Type"] || '—'}</span>
+                                    <span class="text-xs bg-plant-primary/10 text-plant-primary px-3 py-1 rounded-full font-medium">
+                                        ${item["Machine Type"] || '—'}
+                                    </span>
                                 </div>
-                                <div class="grid grid-cols-2 gap-1 text-xs text-gray-700">
-                                    <span>⚡ Speed: ${item["Speed"] ?? '—'} ${item["Unit"] || ''}</span>
-                                    <span>📊 OEE: ${item["OEE"] || '—'}</span>
-                                    <span class="col-span-2">🏭 Output: ${typeof item["Actual Daily Output"] === 'number' ? item["Actual Daily Output"].toLocaleString() : item["Actual Daily Output"] || '—'} / day</span>
+                                <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100 text-xs">
+                                    <div class="flex items-center gap-1.5 text-gray-600">
+                                        <i class="fas fa-gauge-high text-plant-primary"></i>
+                                        <span>${item["Speed"] ?? '—'} ${item["Unit"] || ''}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-gray-600">
+                                        <i class="fas fa-bullseye text-plant-primary"></i>
+                                        <span>${item["OEE"] || '—'}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-gray-600">
+                                        <i class="fas fa-cubes text-plant-primary"></i>
+                                        <span>${typeof item["Actual Daily Output"] === 'number' ? item["Actual Daily Output"].toLocaleString() : item["Actual Daily Output"] || '—'} / day</span>
+                                    </div>
                                 </div>
                             `;
                             dbContainer.appendChild(card);
                         });
 
                     } catch (err) {
-                        loadingState.textContent = '❌ Failed to connect to database.';
+                        loadingState.innerHTML = `
+                            <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3 block"></i>
+                            <span class="text-red-500">Failed to connect to database.</span>
+                        `;
                         console.error('Fetch error:', err);
                     }
                 }
@@ -415,7 +665,7 @@
                     const oeePercent = parseFloat(document.getElementById('oee').value);
 
                     if (!machineName || !machineId || isNaN(speedValue) || isNaN(hoursValue) || isNaN(oeePercent)) {
-                        showToast('⚠️ Please fill all fields correctly.', 'error');
+                        showToast('Please fill all fields correctly.', 'error');
                         return;
                     }
 
@@ -446,7 +696,7 @@
                         const result = await response.json();
 
                         if (result.success) {
-                            showToast('✓ Record appended to Google Sheet!', 'success');
+                            showToast('Record appended to Google Sheet!', 'success');
                             document.getElementById('inventoryForm').reset();
                             document.getElementById('hours').value = '8';
                             document.getElementById('oee').value = '80';
@@ -454,7 +704,7 @@
                             throw new Error(result.error || 'Upload failed');
                         }
                     } catch (err) {
-                        showToast('⚠️ ' + (err.message || 'Network timeout. Cloud sync failed.'), 'error');
+                        showToast(err.message || 'Network timeout. Cloud sync failed.', 'error');
                         console.error('Submit error:', err);
                     }
                 });
