@@ -366,350 +366,300 @@
         </nav>
     </div>
 
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT                                -->
-    <!-- ========================================== -->
     <script>
-        (function() {
-            // ========================================
-            // CONFIGURATION
-            // ========================================
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWhycTiBCZDlQencklS1cA5XxfqtCR1LNJLj6ZGd2RxGFrKqGMrLWUYdxeCtmV_XNSlg/exec";
+(function() {
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUpQL6sUf-aqQ8NSuggRoigQ4PhBlWWkAhVXZcysti6JwQJcSWdtimcdTxrPDwvhff/exec";
+    const savedEmail = sessionStorage.getItem('plantHubUser');
 
-            // ========================================
-            // DOM REFS
-            // ========================================
-            const loginScreen = document.getElementById('loginScreen');
-            const mainApp = document.getElementById('mainApp');
-            const loginForm = document.getElementById('loginForm');
-            const loginEmail = document.getElementById('loginEmail');
-            const loginMessage = document.getElementById('loginMessage');
-            const loginBtn = document.getElementById('loginBtn');
-            const userEmailDisplay = document.getElementById('userEmailDisplay');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const statusToast = document.getElementById('statusToast');
-            const refreshBtn = document.getElementById('refreshBtn');
+    // DOM elements
+    const loginScreen = document.getElementById('loginScreen');
+    const mainApp = document.getElementById('mainApp');
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginMessage = document.getElementById('loginMessage');
+    const loginBtn = document.getElementById('loginBtn');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const statusToast = document.getElementById('statusToast');
+    const refreshBtn = document.getElementById('refreshBtn');
 
-            // ========================================
-            // CHECK SESSION
-            // ========================================
-            const savedEmail = sessionStorage.getItem('plantHubUser');
-            if (savedEmail) {
-                loginScreen.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                userEmailDisplay.textContent = savedEmail;
-                initializeApp();
-            }
+    // Check session
+    if (savedEmail) {
+        loginScreen.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        userEmailDisplay.textContent = savedEmail;
+        initializeApp();
+    }
 
-            // ========================================
-            // LOGIN HANDLER
-            // ========================================
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const email = loginEmail.value.trim().toLowerCase();
+    // Login handler
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = loginEmail.value.trim().toLowerCase();
 
-                if (!email || !email.includes('@')) {
-                    showLoginMessage('Please enter a valid email address.', 'error');
-                    return;
-                }
+        if (!email || !email.includes('@')) {
+            showLoginMessage('Please enter a valid email address.', 'error');
+            return;
+        }
 
-                showLoginMessage('Signing in...', 'info');
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
+        showLoginMessage('Signing in...', 'info');
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Please wait...';
 
-                try {
-                    const response = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            action: 'login',
-                            email: email 
-                        })
-                    });
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'login', email: email })
+            });
 
-                    const text = await response.text();
-                    let result;
-                    try {
-                        result = JSON.parse(text);
-                    } catch(e) {
-                        showLoginMessage('Server error. Please try again.', 'error');
-                        console.error('Non-JSON response:', text);
-                        loginBtn.disabled = false;
-                        loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
-                        return;
-                    }
-
-                    if (result.success) {
-                        sessionStorage.setItem('plantHubUser', email);
-                        loginScreen.classList.add('hidden');
-                        mainApp.classList.remove('hidden');
-                        userEmailDisplay.textContent = email;
-                        showLoginMessage('', '');
-                        initializeApp();
-                    } else {
-                        showLoginMessage(result.error || 'Login failed.', 'error');
-                    }
-                } catch (err) {
-                    showLoginMessage('Network error. Check your connection.', 'error');
-                    console.error('Login error:', err);
-                }
-
+            const text = await response.text();
+            let result;
+            try {
+                result = JSON.parse(text);
+            } catch(e) {
+                showLoginMessage('Server error. Please try again.', 'error');
                 loginBtn.disabled = false;
                 loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
-            });
+                return;
+            }
 
-            function showLoginMessage(msg, type) {
-                if (!msg) {
-                    loginMessage.classList.add('hidden');
+            if (result.success) {
+                sessionStorage.setItem('plantHubUser', email);
+                loginScreen.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                userEmailDisplay.textContent = email;
+                showLoginMessage('', '');
+                initializeApp();
+            } else {
+                showLoginMessage(result.error || 'Login failed.', 'error');
+            }
+        } catch (err) {
+            showLoginMessage('Network error. Check your connection.', 'error');
+            console.error('Login error:', err);
+        }
+
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Sign In';
+    });
+
+    function showLoginMessage(msg, type) {
+        if (!msg) {
+            loginMessage.classList.add('hidden');
+            return;
+        }
+        loginMessage.classList.remove('hidden');
+        const colors = {
+            error: 'text-red-700 bg-red-50 border border-red-200',
+            info: 'text-blue-700 bg-blue-50 border border-blue-200',
+            success: 'text-green-700 bg-green-50 border border-green-200'
+        };
+        loginMessage.className = 'mt-4 text-center text-sm font-medium p-3 rounded-xl ' + (colors[type] || colors.info);
+        loginMessage.textContent = msg;
+    }
+
+    // Logout
+    logoutBtn.addEventListener('click', function() {
+        sessionStorage.removeItem('plantHubUser');
+        loginScreen.classList.remove('hidden');
+        mainApp.classList.add('hidden');
+        loginEmail.value = '';
+        loginMessage.classList.add('hidden');
+    });
+
+    function showToast(msg, type) {
+        statusToast.classList.remove('hidden', 'toast-success', 'toast-error', 'toast-info');
+        statusToast.className = 'rounded-xl px-5 py-3.5 text-sm font-semibold flex items-center gap-3 shadow-lg transition-all duration-500 block';
+        const icons = {
+            success: '<i class="fas fa-check-circle text-lg"></i>',
+            error: '<i class="fas fa-exclamation-circle text-lg"></i>',
+            info: '<i class="fas fa-info-circle text-lg"></i>'
+        };
+        if (type === 'success') statusToast.classList.add('toast-success');
+        else if (type === 'error') statusToast.classList.add('toast-error');
+        else statusToast.classList.add('toast-info');
+        statusToast.innerHTML = (icons[type] || icons.info) + ' ' + msg;
+        setTimeout(() => statusToast.classList.add('hidden'), 3500);
+    }
+
+    function initializeApp() {
+        const machineTypes = [
+            "Tank", "Pump", "Turntable", "Bottle dryer",
+            "Automatic filling machine and capping machine",
+            "Manual filling machine", "Manual capping machine",
+            "Automatical Labelling machine", "Shrink wrapping machine",
+            "Automatic Label coding machine", "Automatic Inner carton coding machine",
+            "Tube filling machine", "Powder filling machine", "Tube sealing machine",
+            "Semi Automatic filling machine", "Tablet counting machine",
+            "ORS powder filling machine", "Blistering machine", "Compression Machine",
+            "Vibro sifter", "Powder blender", "Particle size reduction machine",
+            "Rapid mixer granulator", "Fluid bed dryer", "Oven", "Roller compactor machine"
+        ];
+
+        const typeSelect = document.getElementById('machineType');
+        machineTypes.forEach(type => {
+            const opt = document.createElement('option');
+            opt.value = type;
+            opt.textContent = type;
+            typeSelect.appendChild(opt);
+        });
+
+        const formTab = document.getElementById('formTab');
+        const dbTab = document.getElementById('dbTab');
+        const navForm = document.getElementById('navForm');
+        const navDb = document.getElementById('navDb');
+        const dbContainer = document.getElementById('dbContainer');
+        const loadingState = document.getElementById('loadingState');
+
+        navForm.addEventListener('click', function() {
+            formTab.classList.remove('hidden');
+            dbTab.classList.add('hidden');
+            refreshBtn.classList.add('hidden');
+            navForm.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold border-r border-gray-100 transition";
+            navDb.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium transition";
+        });
+
+        navDb.addEventListener('click', function() {
+            formTab.classList.add('hidden');
+            dbTab.classList.remove('hidden');
+            refreshBtn.classList.remove('hidden');
+            navForm.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium border-r border-gray-100 transition";
+            navDb.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold transition";
+            fetchDatabase();
+        });
+
+        refreshBtn.addEventListener('click', fetchDatabase);
+
+        async function fetchDatabase() {
+            dbContainer.innerHTML = '';
+            loadingState.classList.remove('hidden');
+            loadingState.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-plant-primary mb-3 block"></i><span>Syncing with live sheets...</span>';
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+
+                loadingState.classList.add('hidden');
+
+                if (!result.success) {
+                    dbContainer.innerHTML = '<div class="text-center text-red-500 py-8 text-sm"><i class="fas fa-exclamation-triangle text-3xl mb-2 block"></i>' + (result.error || 'Failed to load data') + '</div>';
                     return;
                 }
-                loginMessage.classList.remove('hidden');
-                const colors = {
-                    error: 'text-red-700 bg-red-50 border border-red-200',
-                    info: 'text-blue-700 bg-blue-50 border border-blue-200',
-                    success: 'text-green-700 bg-green-50 border border-green-200'
-                };
-                loginMessage.className = 'mt-4 text-center text-sm font-medium p-3 rounded-xl ' + (colors[type] || colors.info);
-                loginMessage.textContent = msg;
+
+                const data = result.data || [];
+                if (data.length === 0) {
+                    dbContainer.innerHTML = '<div class="text-center text-gray-400 py-12 text-sm"><i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>No machines listed in spreadsheet yet.</div>';
+                    return;
+                }
+
+                [...data].reverse().forEach(function(item) {
+                    const sectionClass = {
+                        'Liquid': 'section-liquid',
+                        'Solid': 'section-solid',
+                        'Antibiotic': 'section-antibiotic',
+                        'External': 'section-external'
+                    }[item["Section"]] || 'section-liquid';
+                    
+                    const card = document.createElement('div');
+                    card.className = "glass-card machine-card rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                                    <i class="fas fa-microchip text-plant-primary text-sm"></i>
+                                    ${item["Machine Name"] || 'Unnamed Asset'}
+                                </h4>
+                                <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
+                                    <span class="font-medium">ID:</span> ${item["ID"] || 'N/A'}
+                                    <span class="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
+                                    <span class="section-badge ${sectionClass}">${item["Section"] || 'Other'}</span>
+                                </p>
+                            </div>
+                            <span class="text-xs bg-plant-primary/10 text-plant-primary px-3 py-1 rounded-full font-medium">
+                                ${item["Machine Type"] || '—'}
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100 text-xs">
+                            <div class="flex items-center gap-1.5 text-gray-600">
+                                <i class="fas fa-gauge-high text-plant-primary"></i>
+                                <span>${item["Speed"] ?? '—'} ${item["Unit"] || ''}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-600">
+                                <i class="fas fa-bullseye text-plant-primary"></i>
+                                <span>${item["OEE"] || '—'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-gray-600">
+                                <i class="fas fa-cubes text-plant-primary"></i>
+                                <span>${typeof item["Actual Daily Output"] === 'number' ? item["Actual Daily Output"].toLocaleString() : item["Actual Daily Output"] || '—'} / day</span>
+                            </div>
+                        </div>
+                    `;
+                    dbContainer.appendChild(card);
+                });
+
+            } catch (err) {
+                loadingState.innerHTML = '<i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3 block"></i><span class="text-red-500">Failed to connect to database.</span>';
+                console.error('Fetch error:', err);
+            }
+        }
+
+        document.getElementById('inventoryForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const machineName = document.getElementById('machineName').value.trim();
+            const machineId = document.getElementById('machineId').value.trim();
+            const section = document.getElementById('section').value;
+            const machineType = document.getElementById('machineType').value;
+            const speedValue = parseFloat(document.getElementById('speed').value);
+            const unit = document.getElementById('unit').value;
+            const hoursValue = parseFloat(document.getElementById('hours').value);
+            const oeePercent = parseFloat(document.getElementById('oee').value);
+
+            if (!machineName || !machineId || isNaN(speedValue) || isNaN(hoursValue) || isNaN(oeePercent)) {
+                showToast('Please fill all fields correctly.', 'error');
+                return;
             }
 
-            // ========================================
-            // LOGOUT
-            // ========================================
-            logoutBtn.addEventListener('click', function() {
-                sessionStorage.removeItem('plantHubUser');
-                loginScreen.classList.remove('hidden');
-                mainApp.classList.add('hidden');
-                loginEmail.value = '';
-                loginMessage.classList.add('hidden');
-            });
+            const actualDailyOutput = Math.round((hoursValue * 60) * speedValue * (oeePercent / 100));
 
-            // ========================================
-            // TOAST HELPER
-            // ========================================
-            function showToast(msg, type) {
-                statusToast.classList.remove('hidden', 'toast-success', 'toast-error', 'toast-info');
-                statusToast.className = 'rounded-xl px-5 py-3.5 text-sm font-semibold flex items-center gap-3 shadow-lg transition-all duration-500 block';
-                
-                const icons = {
-                    success: '<i class="fas fa-check-circle text-lg"></i>',
-                    error: '<i class="fas fa-exclamation-circle text-lg"></i>',
-                    info: '<i class="fas fa-info-circle text-lg"></i>'
-                };
-                
-                if (type === 'success') {
-                    statusToast.classList.add('toast-success');
-                } else if (type === 'error') {
-                    statusToast.classList.add('toast-error');
+            const payload = [{
+                "Machine Name": machineName,
+                "ID": machineId,
+                "Section": section,
+                "Machine Type": machineType,
+                "Speed": speedValue,
+                "Unit": unit,
+                "Hours": hoursValue,
+                "OEE": oeePercent + "%",
+                "Actual Daily Output": actualDailyOutput,
+                "Timestamp": new Date().toLocaleString()
+            }];
+
+            showToast('Syncing with Google Sheets...', 'info');
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Record appended to Google Sheet!', 'success');
+                    document.getElementById('inventoryForm').reset();
+                    document.getElementById('hours').value = '8';
+                    document.getElementById('oee').value = '80';
                 } else {
-                    statusToast.classList.add('toast-info');
+                    throw new Error(result.error || 'Upload failed');
                 }
-                statusToast.innerHTML = (icons[type] || icons.info) + ' ' + msg;
-                
-                setTimeout(() => statusToast.classList.add('hidden'), 3500);
+            } catch (err) {
+                showToast(err.message || 'Network timeout. Cloud sync failed.', 'error');
+                console.error('Submit error:', err);
             }
-
-            // ========================================
-            // INITIALIZE APP
-            // ========================================
-            function initializeApp() {
-                // Machine types
-                const machineTypes = [
-                    "Tank", "Pump", "Turntable", "Bottle dryer",
-                    "Automatic filling machine and capping machine",
-                    "Manual filling machine", "Manual capping machine",
-                    "Automatical Labelling machine", "Shrink wrapping machine",
-                    "Automatic Label coding machine", "Automatic Inner carton coding machine",
-                    "Tube filling machine", "Powder filling machine", "Tube sealing machine",
-                    "Semi Automatic filling machine", "Tablet counting machine",
-                    "ORS powder filling machine", "Blistering machine", "Compression Machine",
-                    "Vibro sifter", "Powder blender", "Particle size reduction machine",
-                    "Rapid mixer granulator", "Fluid bed dryer", "Oven", "Roller compactor machine"
-                ];
-
-                const typeSelect = document.getElementById('machineType');
-                machineTypes.forEach(type => {
-                    const opt = document.createElement('option');
-                    opt.value = type;
-                    opt.textContent = type;
-                    typeSelect.appendChild(opt);
-                });
-
-                // Navigation
-                const formTab = document.getElementById('formTab');
-                const dbTab = document.getElementById('dbTab');
-                const navForm = document.getElementById('navForm');
-                const navDb = document.getElementById('navDb');
-                const dbContainer = document.getElementById('dbContainer');
-                const loadingState = document.getElementById('loadingState');
-
-                navForm.addEventListener('click', () => {
-                    formTab.classList.remove('hidden');
-                    dbTab.classList.add('hidden');
-                    refreshBtn.classList.add('hidden');
-                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold border-r border-gray-100 transition";
-                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium transition";
-                });
-
-                navDb.addEventListener('click', () => {
-                    formTab.classList.add('hidden');
-                    dbTab.classList.remove('hidden');
-                    refreshBtn.classList.remove('hidden');
-                    navForm.className = "flex flex-col items-center justify-center w-full h-full text-gray-500 font-medium border-r border-gray-100 transition";
-                    navDb.className = "flex flex-col items-center justify-center w-full h-full text-plant-primary font-bold transition";
-                    fetchDatabase();
-                });
-
-                refreshBtn.addEventListener('click', fetchDatabase);
-
-                // ========================================
-                // FETCH DATABASE
-                // ========================================
-                async function fetchDatabase() {
-                    dbContainer.innerHTML = '';
-                    loadingState.classList.remove('hidden');
-                    loadingState.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-plant-primary mb-3 block"></i><span>Syncing with live sheets...</span>';
-
-                    try {
-                        const response = await fetch(SCRIPT_URL);
-                        const result = await response.json();
-
-                        loadingState.classList.add('hidden');
-
-                        if (!result.success) {
-                            dbContainer.innerHTML = `
-                                <div class="text-center text-red-500 py-8 text-sm">
-                                    <i class="fas fa-exclamation-triangle text-3xl mb-2 block"></i>
-                                    ${result.error || 'Failed to load data'}
-                                </div>`;
-                            return;
-                        }
-
-                        const data = result.data || [];
-                        if (data.length === 0) {
-                            dbContainer.innerHTML = `
-                                <div class="text-center text-gray-400 py-12 text-sm">
-                                    <i class="fas fa-inbox text-4xl mb-3 block text-gray-300"></i>
-                                    No machines listed in spreadsheet yet.
-                                </div>`;
-                            return;
-                        }
-
-                        [...data].reverse().forEach(item => {
-                            const card = document.createElement('div');
-                            const sectionClass = {
-                                'Liquid': 'section-liquid',
-                                'Solid': 'section-solid',
-                                'Antibiotic': 'section-antibiotic',
-                                'External': 'section-external'
-                            }[item["Section"]] || 'section-liquid';
-                            
-                            card.className = "glass-card machine-card rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300";
-                            card.innerHTML = `
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <h4 class="font-bold text-gray-800 text-base flex items-center gap-2">
-                                            <i class="fas fa-microchip text-plant-primary text-sm"></i>
-                                            ${item["Machine Name"] || 'Unnamed Asset'}
-                                        </h4>
-                                        <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
-                                            <span class="font-medium">ID:</span> ${item["ID"] || 'N/A'}
-                                            <span class="w-1 h-1 bg-gray-300 rounded-full inline-block"></span>
-                                            <span class="section-badge ${sectionClass}">${item["Section"] || 'Other'}</span>
-                                        </p>
-                                    </div>
-                                    <span class="text-xs bg-plant-primary/10 text-plant-primary px-3 py-1 rounded-full font-medium">
-                                        ${item["Machine Type"] || '—'}
-                                    </span>
-                                </div>
-                                <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100 text-xs">
-                                    <div class="flex items-center gap-1.5 text-gray-600">
-                                        <i class="fas fa-gauge-high text-plant-primary"></i>
-                                        <span>${item["Speed"] ?? '—'} ${item["Unit"] || ''}</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-gray-600">
-                                        <i class="fas fa-bullseye text-plant-primary"></i>
-                                        <span>${item["OEE"] || '—'}</span>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 text-gray-600">
-                                        <i class="fas fa-cubes text-plant-primary"></i>
-                                        <span>${typeof item["Actual Daily Output"] === 'number' ? item["Actual Daily Output"].toLocaleString() : item["Actual Daily Output"] || '—'} / day</span>
-                                    </div>
-                                </div>
-                            `;
-                            dbContainer.appendChild(card);
-                        });
-
-                    } catch (err) {
-                        loadingState.innerHTML = `
-                            <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-3 block"></i>
-                            <span class="text-red-500">Failed to connect to database.</span>
-                        `;
-                        console.error('Fetch error:', err);
-                    }
-                }
-
-                // ========================================
-                // SUBMIT FORM
-                // ========================================
-                document.getElementById('inventoryForm').addEventListener('submit', async function(e) {
-                    e.preventDefault();
-
-                    const machineName = document.getElementById('machineName').value.trim();
-                    const machineId = document.getElementById('machineId').value.trim();
-                    const section = document.getElementById('section').value;
-                    const machineType = document.getElementById('machineType').value;
-                    const speedValue = parseFloat(document.getElementById('speed').value);
-                    const unit = document.getElementById('unit').value;
-                    const hoursValue = parseFloat(document.getElementById('hours').value);
-                    const oeePercent = parseFloat(document.getElementById('oee').value);
-
-                    if (!machineName || !machineId || isNaN(speedValue) || isNaN(hoursValue) || isNaN(oeePercent)) {
-                        showToast('Please fill all fields correctly.', 'error');
-                        return;
-                    }
-
-                    const actualDailyOutput = Math.round((hoursValue * 60) * speedValue * (oeePercent / 100));
-
-                    const payload = [{
-                        "Machine Name": machineName,
-                        "ID": machineId,
-                        "Section": section,
-                        "Machine Type": machineType,
-                        "Speed": speedValue,
-                        "Unit": unit,
-                        "Hours": hoursValue,
-                        "OEE": oeePercent + "%",
-                        "Actual Daily Output": actualDailyOutput,
-                        "Timestamp": new Date().toLocaleString()
-                    }];
-
-                    showToast('Syncing with Google Sheets...', 'info');
-
-                    try {
-                        const response = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            showToast('Record appended to Google Sheet!', 'success');
-                            document.getElementById('inventoryForm').reset();
-                            document.getElementById('hours').value = '8';
-                            document.getElementById('oee').value = '80';
-                        } else {
-                            throw new Error(result.error || 'Upload failed');
-                        }
-                    } catch (err) {
-                        showToast(err.message || 'Network timeout. Cloud sync failed.', 'error');
-                        console.error('Submit error:', err);
-                    }
-                });
-            }
-        })();
-    </script>
+        });
+    }
+})();
+</script>
 </body>
 </html>
